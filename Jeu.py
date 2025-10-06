@@ -7,6 +7,7 @@
 
 import tkinter as tk
 from Boutons import BoutonsJeu
+from Rules import RulesAffichage  
 
 class Jeu:
     def __init__(self):
@@ -26,6 +27,7 @@ class Jeu:
 
         # Canvas de jeu (caché au départ)
         self.canvas = None
+        self.rules_affichage = None  # zone d’affichage du score/vies
 
     def afficher_terrain(self):
         # Affiche le terrain de jeu
@@ -60,6 +62,9 @@ class Jeu:
 
         # --- Briques (rangées en haut) ---
         self.afficher_briques()
+
+        # --- Score et vies ---
+        self.rules_affichage = RulesAffichage(self.fenetre)
 
     def afficher_briques(self):
         # Affiche des briques colorées en haut du canvas

@@ -1,0 +1,8 @@
+Raquette (Taille, forme, vitesse, déplacement)
+Balle (Taille, forme, vitesse, rebond)
+Bonus 
+Boutons (Rejouer, Quitter, Option)
+Structures (Fenètre, Taille, rebond)
+
+Logiques - Règles du jeu
+# Vies/Score

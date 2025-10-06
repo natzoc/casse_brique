@@ -9,10 +9,6 @@ import tkinter as tk
 
 class RulesAffichage:
     def __init__(self, parent):
-        """
-        Crée et affiche la zone d'information contenant le score et les vies.
-        parent : fenêtre principale (tk.Tk)
-        """
         self.parent = parent
 
         # Frame en bas de la fenêtre

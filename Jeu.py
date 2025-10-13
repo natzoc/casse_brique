@@ -1,13 +1,15 @@
 #----------------------------------------------------------------------------#
 # Auteur : Loup Viornery & Nathan Zoccarato                                  #
-# Date : 06/10/2025                                                          #
-# But : Interface graphique en utilisant tkinter                             #
-# ToDo :                                                                     #
+# Date : 12/10/2025                                                          #
+# But : Interface principale du jeu Casse-Brique                              #
 #----------------------------------------------------------------------------#
 
 import tkinter as tk
 from Boutons import BoutonsJeu
-from Rules import RulesAffichage  
+from Rules import RulesAffichage
+from Raquette import Raquette
+from Balle import Balle
+
 
 class Jeu:
     def __init__(self):
@@ -15,59 +17,65 @@ class Jeu:
         self.fenetre = tk.Tk()
         self.fenetre.title("Casse-Brique 2025")
         self.fenetre.geometry("800x600")
-        self.fenetre.config(bg="#001f3f")  # Bleu marine
+        self.fenetre.config(bg="#001f3f")
         self.fenetre.resizable(False, False)
 
-        # Menu principal
+        # Éléments du jeu
+        self.canvas = None
+        self.rules_affichage = None
+        self.raquette = None
+        self.balle = None
+        self.briques = []
+
+        # Menu d’accueil
         self.boutons = BoutonsJeu(
             parent=self.fenetre,
             couleur_fond="#001f3f",
-            action_jouer=self.afficher_terrain  # Action au clic sur "Jouer"
+            action_jouer=self.afficher_terrain
         )
 
-        # Canvas de jeu (caché au départ)
-        self.canvas = None
-        self.rules_affichage = None  # zone d’affichage du score/vies
-
     def afficher_terrain(self):
-        # Affiche le terrain de jeu
+        """Affiche le terrain et instancie les objets du jeu"""
         self.canvas = tk.Canvas(
             self.fenetre,
             width=760,
             height=500,
-            bg="#001f3f",   # Bleu marine
+            bg="#001f3f",
             highlightthickness=0
         )
         self.canvas.pack(pady=20)
+        self.fenetre.focus_set()
 
         # --- Raquette ---
         largeur_raquette = 100
         hauteur_raquette = 10
         x0 = (760 - largeur_raquette) / 2
         y0 = 480
-        self.raquette = self.canvas.create_rectangle(
-            x0, y0, x0 + largeur_raquette, y0 + hauteur_raquette,
-            fill="white"
+        self.raquette = Raquette(
+            self.canvas, x0, y0,
+            largeur=largeur_raquette, hauteur=hauteur_raquette,
+            couleur="white", vitesse=12,
+            parent=self.fenetre
         )
+
+        # --- Briques ---
+        self.afficher_briques()
+
+        # --- Règles (score + vies) ---
+        self.rules_affichage = RulesAffichage(self.fenetre)
 
         # --- Balle ---
         rayon_balle = 8
-        x_centre = 380
-        y_centre = 480 - rayon_balle - 5  # juste au-dessus de la raquette
-        self.balle = self.canvas.create_oval(
-            x_centre - rayon_balle, y_centre - rayon_balle,
-            x_centre + rayon_balle, y_centre + rayon_balle,
-            fill="red"
+        x_centre = x0 + largeur_raquette / 2
+        y_centre = y0 - rayon_balle - 5
+        self.balle = Balle(
+            self.canvas, x_centre, y_centre,
+            rayon=rayon_balle, couleur="red", vitesse=6,
+            jeu=self
         )
 
-        # --- Briques (rangées en haut) ---
-        self.afficher_briques()
-
-        # --- Score et vies ---
-        self.rules_affichage = RulesAffichage(self.fenetre)
-
     def afficher_briques(self):
-        # Affiche des briques colorées en haut du canvas
+        """Affiche un ensemble de briques colorées"""
         couleurs = ["#ff5733", "#ffbd33", "#75ff33", "#33c1ff", "#c433ff"]
         largeur_brique = 70
         hauteur_brique = 20
@@ -81,12 +89,35 @@ class Jeu:
                 y1 = 20 + ligne * (hauteur_brique + espacement)
                 x2 = x1 + largeur_brique
                 y2 = y1 + hauteur_brique
-                self.canvas.create_rectangle(
+                brique_id = self.canvas.create_rectangle(
                     x1, y1, x2, y2,
                     fill=couleurs[ligne % len(couleurs)],
                     outline=""
                 )
+                self.briques.append(brique_id)
+
+    def reset_positions(self):
+        """Réinitialise la position de la raquette et de la balle"""
+        largeur_raquette = self.raquette.largeur
+        x0 = (760 - largeur_raquette) / 2
+        y0 = 480
+        self.canvas.coords(
+            self.raquette.id,
+            x0, y0, x0 + largeur_raquette, y0 + self.raquette.hauteur
+        )
+
+        # Balle juste au-dessus de la raquette
+        rayon = self.balle.rayon
+        x_centre = x0 + largeur_raquette / 2
+        y_centre = y0 - rayon - 5
+        self.balle.reset_position(x_centre, y_centre)
+
+    def victoire(self):
+        """Affiche un message de victoire et ferme le jeu"""
+        import tkinter.messagebox as msg
+        msg.showinfo("Victoire", "🎉 Félicitations ! Vous avez détruit toutes les briques.")
+        self.fenetre.destroy()
 
     def lancer(self):
-        # Démarre la boucle principale de l'interface graphique
+        """Lance la boucle principale du jeu"""
         self.fenetre.mainloop()

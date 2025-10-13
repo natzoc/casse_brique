@@ -6,3 +6,10 @@ Structures (Fenètre, Taille, rebond)
 
 Logiques - Règles du jeu
 # Vies/Score
+
+ToDo: 
+vitesse balle non constante à corriger
+rebond parfois aléatoire à corriger
+boutons dans le menu (options, rejouer, quitter)
+boutons options avec bonus/malus activable
+affichage meilleur score dans le menu principal 

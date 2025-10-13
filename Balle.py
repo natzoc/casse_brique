@@ -12,7 +12,7 @@ class Balle:
     def __init__(self, canvas, x, y, rayon=8, couleur="red", vitesse=5, jeu=None):
         self.canvas = canvas
         self.rayon = rayon
-        self.couleur = couleur
+        self.couleur = couleur 
         self.vitesse = vitesse
         self.jeu = jeu
 
@@ -37,7 +37,7 @@ class Balle:
         self._boucle()
 
     def lancer(self, event=None):
-        """Démarre la balle si elle est immobile"""
+        # Lance la balle si elle n'est pas déjà en mouvement
         if not self.en_mouvement:
             self.en_mouvement = True
             self.vx = random.choice([-self.vitesse, self.vitesse])
@@ -48,18 +48,18 @@ class Balle:
                 self.jeu.raquette.actif = True
 
     def _boucle(self):
-        """Boucle principale du déplacement"""
+        # Boucle de mise à jour de la balle"
         if self.en_mouvement:
             self.deplacer()
             self._gerer_collisions()
         self.canvas.after(16, self._boucle)
 
     def deplacer(self):
-        """Déplace la balle selon ses vitesses vx, vy"""
+        # Déplace la balle selon son vecteur de déplacement
         self.canvas.move(self.id, self.vx, self.vy)
 
     def _gerer_collisions(self):
-        """Gère les collisions avec murs, raquette, briques, fond"""
+        # Gère les collisions avec les murs, la raquette et les briques
         x1, y1, x2, y2 = self.canvas.coords(self.id)
         largeur = self.canvas.winfo_width()
         hauteur = self.canvas.winfo_height()
@@ -93,6 +93,7 @@ class Balle:
         for brique_id in self.jeu.briques:
             bx1, by1, bx2, by2 = self.canvas.coords(brique_id)
             if (x2 >= bx1 and x1 <= bx2 and y2 >= by1 and y1 <= by2):
+                
                 briques_a_supprimer.append(brique_id)
                 self.vy = -self.vy
                 self.jeu.rules_affichage.maj_score(10)

@@ -57,11 +57,9 @@ class Raquette:
         # Lancement de la boucle de déplacement fluide
         self._deplacer_en_continu()
 
-    #----------------------#
     #  GESTION DU CLAVIER
-    #----------------------#
     def _touche_appuyee(self, event):
-        """ Active le mouvement à gauche/droite lorsqu'une touche est pressée """
+        # Active le mouvement à gauche/droite lorsqu'une touche est pressée
         if not self.actif:
             return  # Le joueur ne peut pas bouger avant le début du jeu
 
@@ -71,7 +69,7 @@ class Raquette:
             self.deplacement_droite = True
 
     def _touche_relachee(self, event):
-        """ Stoppe le mouvement lorsque la touche est relâchée """
+        # Stoppe le mouvement lorsque la touche est relâchée 
         if event.keysym == "Left":
             self.deplacement_gauche = False
         elif event.keysym == "Right":
@@ -79,10 +77,9 @@ class Raquette:
 
     #  DEPLACEMENT
     def deplacer(self, dx):
-        """
-        Déplace la raquette horizontalement de dx pixels.
-        Gère aussi les collisions avec les bords gauche/droite.
-        """
+        # Déplace la raquette horizontalement de dx pixels.
+        # Gère aussi les collisions avec les bords gauche/droite.
+        
         coords = self.canvas.coords(self.id)
         if coords:
             # Empêche la raquette de sortir de l'écran
@@ -94,10 +91,9 @@ class Raquette:
             self.canvas.move(self.id, dx, 0)
 
     def _deplacer_en_continu(self):
-        """
-        Boucle de mise à jour appelée toutes les 16 ms (~60 fois par seconde).
-        Si une touche est enfoncée, la raquette se déplace continuellement.
-        """
+        
+        # Boucle de mise à jour appelée toutes les 16 ms (~60 fois par seconde).
+        # Si une touche est enfoncée, la raquette se déplace continuellement.
         if self._en_marche:
             # Le joueur ne peut bouger que si le jeu est actif
             if self.actif:
@@ -110,5 +106,5 @@ class Raquette:
             self.canvas.after(self._tick_ms, self._deplacer_en_continu)
 
     def position(self):
-        """ Renvoie les coordonnées actuelles de la raquette """
+        # Renvoie les coordonnées actuelles de la raquette 
         return self.canvas.coords(self.id)

@@ -6,6 +6,7 @@
 
 import tkinter as tk
 import random
+import math
 
 
 class Balle:
@@ -47,7 +48,7 @@ class Balle:
 
     #   LANCEMENT DE LA BALLE
     def lancer(self, event=None):
-        """ Lance la balle si elle est immobile """
+        # Lance la balle si elle est immobile 
         if not self.en_mouvement:
             self.en_mouvement = True
 
@@ -61,7 +62,7 @@ class Balle:
 
     #   BOUCLE PRINCIPALE
     def _boucle(self):
-        """ Boucle appelée toutes les 16ms (~60 FPS) """
+        # Boucle appelée toutes les 16ms (~60 FPS) 
         if self.en_mouvement:
             self.deplacer()
             self._gerer_collisions()
@@ -70,12 +71,12 @@ class Balle:
         self.canvas.after(16, self._boucle)
 
     def deplacer(self):
-        """ Déplace la balle selon son vecteur de déplacement """
+        # Déplace la balle selon son vecteur de déplacement 
         self.canvas.move(self.id, self.vx, self.vy)
 
     #   COLLISIONS
     def _gerer_collisions(self):
-        """ Gère les collisions avec les murs, la raquette et les briques """
+        # Gère les collisions avec les murs, la raquette et les briques 
         x1, y1, x2, y2 = self.canvas.coords(self.id)
         largeur = self.canvas.winfo_width()
         hauteur = self.canvas.winfo_height()
@@ -102,15 +103,17 @@ class Balle:
                 # Calcul du rebond en fonction de la zone touchée sur la raquette
                 milieu_raquette = (rx1 + rx2) / 2
                 distance = (x1 + self.rayon - milieu_raquette) / (self.jeu.raquette.largeur / 2)
-                self.vx = self.vitesse * distance
-                self.vy = -abs(self.vitesse)
+                # Conversion de la position d’impact en angle (jusqu’à ±60°)
+                angle = distance * (math.pi / 3)
+                self.vx = self.vitesse * math.sin(angle)
+                self.vy = -self.vitesse * math.cos(angle)
 
         # Collision avec les briques
         # Liste temporaire pour stocker les briques touchées par la balle
         briques_a_supprimer = []
         # Parcourt toutes les briques du jeu
         for brique_id in self.jeu.briques:
-        # Récupère les coordonnées (x1, y1, x2, y2) de la brique
+            # Récupère les coordonnées (x1, y1, x2, y2) de la brique
             bx1, by1, bx2, by2 = self.canvas.coords(brique_id)
             # Test de collision : vérifie si la balle et la brique se chevauchent
             # - x2 >= bx1 : le bord droit de la balle dépasse le bord gauche de la brique
@@ -137,15 +140,18 @@ class Balle:
         if not self.jeu.briques:
             self.jeu.victoire()
 
+        # Normalisation de la vitesse
+        self._normaliser_vitesse()
+
     # GESTION DES VIES
     def _perdre_vie(self):
-        """ Gère la perte d'une vie et réinitialise la balle """
+        # Gère la perte d'une vie et réinitialise la balle 
         self.en_mouvement = False
         self.jeu.rules_affichage.perdre_vie()
         self.jeu.reset_positions()
 
     def reset_position(self, x, y):
-        """ Replace la balle au point de départ et arrête le mouvement """
+        # Replace la balle au point de départ et arrête le mouvement 
         self.canvas.coords(
             self.id,
             x - self.rayon, y - self.rayon,
@@ -154,3 +160,13 @@ class Balle:
         self.vx = 0
         self.vy = 0
         self.en_mouvement = False
+
+    # Normalisation de la vitesse
+    def _normaliser_vitesse(self):
+        # Garde la vitesse constante après les rebonds 
+        vitesse_actuelle = math.sqrt(self.vx**2 + self.vy**2)
+        if vitesse_actuelle == 0:
+            return
+        facteur = self.vitesse / vitesse_actuelle
+        self.vx *= facteur
+        self.vy *= facteur

@@ -35,7 +35,7 @@ class Jeu:
         )
 
     def afficher_terrain(self):
-        """Affiche le terrain et instancie les objets du jeu"""
+        # Affiche le terrain et instancie les objets du jeu
         self.canvas = tk.Canvas(
             self.fenetre,
             width=760,
@@ -46,7 +46,7 @@ class Jeu:
         self.canvas.pack(pady=20)
         self.fenetre.focus_set()
 
-        # --- Raquette ---
+        # Raquette 
         largeur_raquette = 100
         hauteur_raquette = 10
         x0 = (760 - largeur_raquette) / 2
@@ -75,7 +75,7 @@ class Jeu:
         )
 
     def afficher_briques(self):
-        """Affiche un ensemble de briques colorées"""
+        # Affiche un ensemble de briques colorées
         couleurs = ["#ff5733", "#ffbd33", "#75ff33", "#33c1ff", "#c433ff"]
         largeur_brique = 70
         hauteur_brique = 20
@@ -97,7 +97,7 @@ class Jeu:
                 self.briques.append(brique_id)
 
     def reset_positions(self):
-        """Réinitialise la position de la raquette et de la balle"""
+        # Réinitialise la position de la raquette et de la balle
         largeur_raquette = self.raquette.largeur
         x0 = (760 - largeur_raquette) / 2
         y0 = 480
@@ -113,11 +113,11 @@ class Jeu:
         self.balle.reset_position(x_centre, y_centre)
 
     def victoire(self):
-        """Affiche un message de victoire et ferme le jeu"""
+        # Affiche un message de victoire et ferme le jeu
         import tkinter.messagebox as msg
-        msg.showinfo("Victoire", "🎉 Félicitations ! Vous avez détruit toutes les briques.")
+        msg.showinfo("Victoire", "Félicitations ! Vous avez détruit toutes les briques.")
         self.fenetre.destroy()
 
     def lancer(self):
-        """Lance la boucle principale du jeu"""
+        # Lance la boucle principale du jeu
         self.fenetre.mainloop()

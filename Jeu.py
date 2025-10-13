@@ -58,13 +58,13 @@ class Jeu:
             parent=self.fenetre
         )
 
-        # --- Briques ---
+        # Briques
         self.afficher_briques()
 
-        # --- Règles (score + vies) ---
+        # Règles (score + vies)
         self.rules_affichage = RulesAffichage(self.fenetre)
 
-        # --- Balle ---
+        # Balle
         rayon_balle = 8
         x_centre = x0 + largeur_raquette / 2
         y_centre = y0 - rayon_balle - 5

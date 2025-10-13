@@ -14,9 +14,4 @@ boutons dans le menu (options, rejouer, quitter)
 boutons options avec bonus/malus activable
 affichage meilleur score dans le menu principal 
 
-Connaitre la vitesse de déplacement de la Raquette
-Vitesse visuel et vitesse commandes
-
-Connaitre l'unité de la vitesse de la balle 
-Refaire la destruction des briques en supprimant de la liste l'id de la briques
 Commenter les 4 coordonnées de collision 

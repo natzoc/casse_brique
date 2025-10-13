@@ -45,9 +45,7 @@ class Balle:
         # Démarre la boucle de mise à jour (rafraîchissement continu)
         self._boucle()
 
-    #------------------------#
     #   LANCEMENT DE LA BALLE
-    #------------------------#
     def lancer(self, event=None):
         """ Lance la balle si elle est immobile """
         if not self.en_mouvement:
@@ -61,9 +59,7 @@ class Balle:
             if self.jeu and self.jeu.raquette:
                 self.jeu.raquette.actif = True
 
-    #------------------------#
     #   BOUCLE PRINCIPALE
-    #------------------------#
     def _boucle(self):
         """ Boucle appelée toutes les 16ms (~60 FPS) """
         if self.en_mouvement:
@@ -77,31 +73,29 @@ class Balle:
         """ Déplace la balle selon son vecteur de déplacement """
         self.canvas.move(self.id, self.vx, self.vy)
 
-    #------------------------#
     #   COLLISIONS
-    #------------------------#
     def _gerer_collisions(self):
         """ Gère les collisions avec les murs, la raquette et les briques """
         x1, y1, x2, y2 = self.canvas.coords(self.id)
         largeur = self.canvas.winfo_width()
         hauteur = self.canvas.winfo_height()
 
-        # --- Murs gauche / droite ---
+        # Murs gauche / droite 
         if x1 <= 0:
             self.vx = abs(self.vx)   # rebondit vers la droite
         elif x2 >= largeur:
             self.vx = -abs(self.vx)  # rebondit vers la gauche
 
-        # --- Mur haut ---
+        # Mur haut
         if y1 <= 0:
             self.vy = abs(self.vy)   # rebondit vers le bas
 
-        # --- Mur bas : la balle tombe => perte de vie ---
+        # Mur bas : la balle tombe => perte de vie 
         if y2 >= hauteur:
             self._perdre_vie()
             return
 
-        # --- Collision avec la raquette ---
+        # Collision avec la raquette
         if self.jeu and self.jeu.raquette:
             rx1, ry1, rx2, ry2 = self.jeu.raquette.position()
             if y2 >= ry1 and y1 <= ry2 and x2 >= rx1 and x1 <= rx2 and self.vy > 0:
@@ -111,14 +105,28 @@ class Balle:
                 self.vx = self.vitesse * distance
                 self.vy = -abs(self.vitesse)
 
-        # --- Collision avec les briques ---
+        # Collision avec les briques
+        # Liste temporaire pour stocker les briques touchées par la balle
         briques_a_supprimer = []
+        # Parcourt toutes les briques du jeu
         for brique_id in self.jeu.briques:
+        # Récupère les coordonnées (x1, y1, x2, y2) de la brique
             bx1, by1, bx2, by2 = self.canvas.coords(brique_id)
+            # Test de collision : vérifie si la balle et la brique se chevauchent
+            # - x2 >= bx1 : le bord droit de la balle dépasse le bord gauche de la brique
+            # - x1 <= bx2 : le bord gauche de la balle dépasse le bord droit de la brique
+            # - y2 >= by1 : le bas de la balle dépasse le haut de la brique
+            # - y1 <= by2 : le haut de la balle dépasse le bas de la brique
             if (x2 >= bx1 and x1 <= bx2 and y2 >= by1 and y1 <= by2):
+                # Si collision détectée :
+                # On ajoute cette brique dans la liste à supprimer
                 briques_a_supprimer.append(brique_id)
+                # On inverse la direction verticale de la balle
+                # Cela simule le rebond après avoir touché une brique
                 self.vy = -self.vy  # rebond vertical
+                # On augmente le score de 10 points via l’affichage du HUD (RulesAffichage)
                 self.jeu.rules_affichage.maj_score(10)
+                # On quitte la boucle : une seule brique est cassée à la fois
                 break
 
         for bid in briques_a_supprimer:
@@ -129,9 +137,7 @@ class Balle:
         if not self.jeu.briques:
             self.jeu.victoire()
 
-    #------------------------#
-    #   GESTION DES VIES
-    #------------------------#
+    # GESTION DES VIES
     def _perdre_vie(self):
         """ Gère la perte d'une vie et réinitialise la balle """
         self.en_mouvement = False

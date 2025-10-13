@@ -63,7 +63,7 @@ class Raquette:
     def _touche_appuyee(self, event):
         """ Active le mouvement à gauche/droite lorsqu'une touche est pressée """
         if not self.actif:
-            return  # ❌ Le joueur ne peut pas bouger avant le début du jeu
+            return  # Le joueur ne peut pas bouger avant le début du jeu
 
         if event.keysym == "Left":
             self.deplacement_gauche = True
@@ -77,9 +77,7 @@ class Raquette:
         elif event.keysym == "Right":
             self.deplacement_droite = False
 
-    #----------------------#
     #  DEPLACEMENT
-    #----------------------#
     def deplacer(self, dx):
         """
         Déplace la raquette horizontalement de dx pixels.
@@ -101,7 +99,7 @@ class Raquette:
         Si une touche est enfoncée, la raquette se déplace continuellement.
         """
         if self._en_marche:
-            # 🔓 Le joueur ne peut bouger que si le jeu est actif
+            # Le joueur ne peut bouger que si le jeu est actif
             if self.actif:
                 if self.deplacement_gauche:
                     self.deplacer(-self.vitesse)

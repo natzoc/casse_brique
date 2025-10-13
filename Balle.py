@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------------#
-# Auteur : Loup Viornery & Nathan Zoccarato                                  #
-# Date : 13/10/2025                                                          #
-# But : Classe représentant la balle du casse-brique                         #
+# Auteur : Loup Viornery & Nathan Zoccarato
+# Date : 13/10/2025
+# But : Classe représentant la balle du casse-brique
 #----------------------------------------------------------------------------#
 
 import tkinter as tk
@@ -10,92 +10,114 @@ import random
 
 class Balle:
     def __init__(self, canvas, x, y, rayon=8, couleur="red", vitesse=5, jeu=None):
+        """
+        Initialise une balle :
+        - canvas : zone de dessin Tkinter
+        - x, y : position de départ
+        - rayon : taille de la balle
+        - couleur : couleur de la balle
+        - vitesse : vitesse de déplacement (pixels / frame)
+        - jeu : référence au jeu principal
+        """
         self.canvas = canvas
-        self.rayon = rayon
-        self.couleur = couleur 
-        self.vitesse = vitesse
         self.jeu = jeu
+        self.rayon = rayon
+        self.couleur = couleur
+        self.vitesse = vitesse
 
-        # Création graphique
+        # Création du cercle représentant la balle
         self.id = canvas.create_oval(
             x - rayon, y - rayon, x + rayon, y + rayon,
             fill=couleur, outline=""
         )
 
-        # Vecteurs de déplacement
+        # Vecteurs de déplacement (horizontal et vertical)
         self.vx = 0
         self.vy = 0
 
-        # État de mouvement
+        # Indique si la balle bouge ou non
         self.en_mouvement = False
 
-        # Touche Espace pour lancer la balle
+        # Associe la touche "Espace" pour lancer la balle
         if jeu is not None:
             jeu.fenetre.bind("<space>", self.lancer)
 
-        # Démarrage de la boucle de mise à jour
+        # Démarre la boucle de mise à jour (rafraîchissement continu)
         self._boucle()
 
+    #------------------------#
+    #   LANCEMENT DE LA BALLE
+    #------------------------#
     def lancer(self, event=None):
-        # Lance la balle si elle n'est pas déjà en mouvement
+        """ Lance la balle si elle est immobile """
         if not self.en_mouvement:
             self.en_mouvement = True
-            self.vx = random.choice([-self.vitesse, self.vitesse])
-            self.vy = -self.vitesse
 
-            # ✅ Activation de la raquette au démarrage de la balle
+            # Direction aléatoire gauche/droite
+            self.vx = random.choice([-self.vitesse, self.vitesse])
+            self.vy = -self.vitesse  # Toujours vers le haut au départ
+
+            # Active la raquette dès le début
             if self.jeu and self.jeu.raquette:
                 self.jeu.raquette.actif = True
 
+    #------------------------#
+    #   BOUCLE PRINCIPALE
+    #------------------------#
     def _boucle(self):
-        # Boucle de mise à jour de la balle"
+        """ Boucle appelée toutes les 16ms (~60 FPS) """
         if self.en_mouvement:
             self.deplacer()
             self._gerer_collisions()
+
+        # Replanifie la fonction pour la prochaine "frame"
         self.canvas.after(16, self._boucle)
 
     def deplacer(self):
-        # Déplace la balle selon son vecteur de déplacement
+        """ Déplace la balle selon son vecteur de déplacement """
         self.canvas.move(self.id, self.vx, self.vy)
 
+    #------------------------#
+    #   COLLISIONS
+    #------------------------#
     def _gerer_collisions(self):
-        # Gère les collisions avec les murs, la raquette et les briques
+        """ Gère les collisions avec les murs, la raquette et les briques """
         x1, y1, x2, y2 = self.canvas.coords(self.id)
         largeur = self.canvas.winfo_width()
         hauteur = self.canvas.winfo_height()
 
-        # Murs gauche/droite
+        # --- Murs gauche / droite ---
         if x1 <= 0:
-            self.vx = abs(self.vx)
+            self.vx = abs(self.vx)   # rebondit vers la droite
         elif x2 >= largeur:
-            self.vx = -abs(self.vx)
+            self.vx = -abs(self.vx)  # rebondit vers la gauche
 
-        # Mur haut
+        # --- Mur haut ---
         if y1 <= 0:
-            self.vy = abs(self.vy)
+            self.vy = abs(self.vy)   # rebondit vers le bas
 
-        # Bas = perte de vie
+        # --- Mur bas : la balle tombe => perte de vie ---
         if y2 >= hauteur:
             self._perdre_vie()
             return
 
-        # Collision raquette
+        # --- Collision avec la raquette ---
         if self.jeu and self.jeu.raquette:
             rx1, ry1, rx2, ry2 = self.jeu.raquette.position()
             if y2 >= ry1 and y1 <= ry2 and x2 >= rx1 and x1 <= rx2 and self.vy > 0:
+                # Calcul du rebond en fonction de la zone touchée sur la raquette
                 milieu_raquette = (rx1 + rx2) / 2
                 distance = (x1 + self.rayon - milieu_raquette) / (self.jeu.raquette.largeur / 2)
                 self.vx = self.vitesse * distance
                 self.vy = -abs(self.vitesse)
 
-        # Collision briques
+        # --- Collision avec les briques ---
         briques_a_supprimer = []
         for brique_id in self.jeu.briques:
             bx1, by1, bx2, by2 = self.canvas.coords(brique_id)
             if (x2 >= bx1 and x1 <= bx2 and y2 >= by1 and y1 <= by2):
-                
                 briques_a_supprimer.append(brique_id)
-                self.vy = -self.vy
+                self.vy = -self.vy  # rebond vertical
                 self.jeu.rules_affichage.maj_score(10)
                 break
 
@@ -103,17 +125,21 @@ class Balle:
             self.canvas.delete(bid)
             self.jeu.briques.remove(bid)
 
+        # Si plus de briques => victoire
         if not self.jeu.briques:
             self.jeu.victoire()
 
+    #------------------------#
+    #   GESTION DES VIES
+    #------------------------#
     def _perdre_vie(self):
-        # Gère la perte d'une vie et réinitialise la balle
+        """ Gère la perte d'une vie et réinitialise la balle """
         self.en_mouvement = False
         self.jeu.rules_affichage.perdre_vie()
         self.jeu.reset_positions()
 
     def reset_position(self, x, y):
-        # Réinitialise la position de la balle et arrête son mouvement
+        """ Replace la balle au point de départ et arrête le mouvement """
         self.canvas.coords(
             self.id,
             x - self.rayon, y - self.rayon,

@@ -1,46 +1,35 @@
-# casse_brique
+== Casse-Brique ==
 
+== Règles du jeu ==
 
- -Règles du jeu Casse-Brique:
+Le but du jeu est simple : détruire toutes les briques à l’écran à l’aide d’une balle sans la laisser tomber.
 
-Le but du jeu est simple : détruire tous les briques à l’écran à l’aide d’une balle sans la laisser tomber.
+== Objectif ==
 
+- Le joueur contrôle une raquette située en bas de l’écran
+- Une balle rebondit sur les murs, les briques et la raquette
+- Le but est de faire le plus de points possible
+- Le joueur passe au niveau suivant lorsqu’il ne reste plus aucune brique
 
- -Objectif:
+== Règles de base ==
 
-Le joueur contrôle une raquette située en bas de l’écran.
+- Le joueur commence avec 3 vies
+- Si la balle touche le bas de l’écran, le joueur perd une vie
+- Le jeu se termine lorsque toutes les vies sont perdues
+- La vitesse de la balle reste constante
 
-Une balle rebondit sur les murs, les briques et la raquette.
+Certaines briques peuvent être spéciales :
 
-Chaque brique touchée par la balle est détruite et rapporte des points.
+- Bonus : agrandissement de la raquette, balle grossie
+- Malus : rétrécissement de la raquette, balle plus petite
 
-Le joueur passe au niveau suivant lorsqu’il ne reste plus aucune brique.
+== Contrôles ==
 
+- Flèche gauche / droite : déplacer la raquette
+- Espace : lancer la balle au début d’un niveau
 
- -Règles de base:
+== Score ==
 
-Si la balle touche le bas de l’écran, le joueur perd une vie.
-
-Le jeu se termine lorsque toutes les vies sont perdues.
-
-La vitesse de la balle peut augmenter à mesure que le joueur avance.
-
--Certaines briques peuvent être spéciales (bonus ou malus) :
-
- Bonus : agrandissement de la raquette, balles grossie.
-
- Malus : rétrécissement de la raquette, rapetissement de la raquette.
- 
-
- -Contrôles
-
-Flèche gauche / droite : déplacer la raquette.
-
-Espace : lancer la balle au début d’un niveau.
-
-
- -Score
-
-Chaque brique détruite rapporte un certain nombre de points.
-
-Le score total s’affiche à l’écran pendant la partie.
+- Chaque brique détruite rapporte 10 points
+- Chaque brique supplémentaire touchée sans retour à la raquette rapporte 10 points supplémentaires
+- Le score total s’affiche à l’écran pendant la partie

@@ -8,7 +8,6 @@ Logiques - Règles du jeu
 # Vies/Score
 
 ToDo: 
-systeme de point, lorsque plusiseurs brques sont touchés en un lancer, les points augmente de 10 par brique, puis revienne a 10 une fois la balle revenue
 affichage meilleur score dans le menu principal 
 Liste, File, Pile
 Tester game over et victoire

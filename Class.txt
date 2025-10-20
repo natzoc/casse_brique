@@ -8,13 +8,12 @@ Logiques - Règles du jeu
 # Vies/Score
 
 ToDo: 
-Corriger balle multiple
+systeme de point, lorsque plusiseurs brques sont touchés en un lancer, les points augmente de 10 par brique, puis revienne a 10 une fois la balle revenue
 affichage meilleur score dans le menu principal 
 Liste, File, Pile
-Vérifié que tout est fait 
 Tester game over et victoire
-le jeu crash a corriger
-Read me regle du jeu
+Lorsqu'on clique sur rejouer, cela doit réinstialiser la fenetre du menu principal, pareil quand on clique sur retour après avoir cliqué sur options
+Read me regle du jeu a formater
 faire tt les commentaires sous # 
 Relire les consignes du tp et comparé
 

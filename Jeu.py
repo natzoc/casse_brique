@@ -29,6 +29,12 @@ class Jeu:
         self.bonus_actives = tk.BooleanVar(value=True)
         self.frame_menu = None
 
+        # Scores
+        self.score_actuel = 0
+        self.meilleur_score = 0
+        self.label_meilleur_score_menu = None
+        self.label_meilleur_score_jeu = None
+
         # Menu principal
         self.boutons = BoutonsJeu(
             parent=self.fenetre,
@@ -36,11 +42,39 @@ class Jeu:
             action_jouer=self.afficher_terrain,
             action_options=self.afficher_options
         )
+        self.afficher_meilleur_score_menu()
+
+    # ================= AFFICHAGE MEILLEUR SCORE =================
+    def afficher_meilleur_score_menu(self):
+        if self.label_meilleur_score_menu:
+            self.label_meilleur_score_menu.destroy()
+        self.label_meilleur_score_menu = tk.Label(
+            self.fenetre,
+            text=f"Meilleur score : {self.meilleur_score}",
+            font=("Arial", 14, "bold"),
+            fg="white",
+            bg="#001f3f"
+        )
+        self.label_meilleur_score_menu.place(relx=0.5, rely=0.95, anchor="center")
+
+    def afficher_meilleur_score_jeu(self):
+        if self.label_meilleur_score_jeu:
+            self.label_meilleur_score_jeu.destroy()
+        self.label_meilleur_score_jeu = tk.Label(
+            self.fenetre,
+            text=f"Meilleur score : {self.meilleur_score}",
+            font=("Arial", 12, "bold"),
+            fg="white",
+            bg="#001f3f"
+        )
+        self.label_meilleur_score_jeu.place(relx=0.5, rely=0.88, anchor="center")
 
     # ================= AFFICHAGE DU TERRAIN =================
     def afficher_terrain(self):
         for widget in self.fenetre.winfo_children():
             widget.destroy()
+
+        self.score_actuel = 0  # reset score actuel
 
         self.canvas = tk.Canvas(
             self.fenetre,
@@ -76,6 +110,7 @@ class Jeu:
         self.afficher_briques()
         self.rules_affichage = RulesAffichage(self.fenetre)
         self.afficher_menu_jeu()  # Menu bas pendant le jeu
+        self.afficher_meilleur_score_jeu()
 
     # ================= MENU EN BAS =================
     def afficher_menu_jeu(self):
@@ -88,7 +123,7 @@ class Jeu:
 
         btn_rejouer = tk.Button(
             self.frame_menu, text="Menu", font=("Arial", 12, "bold"),
-            bg="white", fg="#001f3f", width=12, command=self.rejouer
+            bg="white", fg="#001f3f", width=12, command=self.retour_menu_principal
         )
         btn_rejouer.pack(side="left", padx=10)
 
@@ -158,7 +193,7 @@ class Jeu:
 
         btn_retour = tk.Button(
             frame_options,
-            text="Retour au menu",
+            text="Retour",
             font=("Arial", 14, "bold"),
             bg="white",
             fg="#001f3f",
@@ -176,6 +211,7 @@ class Jeu:
             action_jouer=self.afficher_terrain,
             action_options=self.afficher_options
         )
+        self.afficher_meilleur_score_menu()
 
     # ================= BONUS / MALUS =================
     def modifier_taille_raquette(self, facteur, duree):
@@ -219,6 +255,7 @@ class Jeu:
             action_jouer=self.afficher_terrain,
             action_options=self.afficher_options
         )
+        self.afficher_meilleur_score_menu()
 
     # ================= FIN DE PARTIE =================
     def victoire(self):
@@ -238,7 +275,10 @@ class Jeu:
                 fill="gold"
             )
 
+        if self.score_actuel > self.meilleur_score:
+            self.meilleur_score = self.score_actuel
         self.afficher_menu_jeu()
+        self.afficher_meilleur_score_jeu()
 
     def game_over(self):
         if self.balle:
@@ -254,7 +294,10 @@ class Jeu:
                 fill="red"
             )
 
+        if self.score_actuel > self.meilleur_score:
+            self.meilleur_score = self.score_actuel
         self.afficher_menu_jeu()
+        self.afficher_meilleur_score_jeu()
 
     # ================= LANCEMENT =================
     def lancer(self):

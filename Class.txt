@@ -8,12 +8,10 @@ Logiques - Règles du jeu
 # Vies/Score
 
 ToDo: 
-# affichage meilleur score dans le menu principal 
 Liste, File, Pile
 Tester game over et victoire
-- Victoire  et Game Over = Texte + Boutons au milieu de la fenetre
-Read me regle du jeu a formater
-faire tt les commentaires sous # 
+- Victoire  et Game Over = Texte + Freeze
+faire tt les commentaires sous # + reformuler variable 
 Relire les consignes du tp et comparé
 
 Commenter les 4 coordonnées de collision 

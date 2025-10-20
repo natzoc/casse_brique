@@ -35,6 +35,9 @@ class Jeu:
         self.label_meilleur_score_menu = None
         self.label_meilleur_score_jeu = None
 
+        # Etat du jeu (pour freeze après fin de partie)
+        self.partie_terminee = False
+
         # Menu principal
         self.boutons = BoutonsJeu(
             parent=self.fenetre,
@@ -75,6 +78,7 @@ class Jeu:
             widget.destroy()
 
         self.score_actuel = 0  # reset score actuel
+        self.partie_terminee = False  # réinitialisation état jeu
 
         self.canvas = tk.Canvas(
             self.fenetre,
@@ -108,7 +112,7 @@ class Jeu:
 
         self.briques.clear()
         self.afficher_briques()
-        self.rules_affichage = RulesAffichage(self.fenetre)
+        self.rules_affichage = RulesAffichage(self.fenetre, jeu=self)
         self.afficher_menu_jeu()  # Menu bas pendant le jeu
         self.afficher_meilleur_score_jeu()
 
@@ -118,7 +122,6 @@ class Jeu:
             self.frame_menu.destroy()
 
         self.frame_menu = tk.Frame(self.fenetre, bg="#001f3f")
-        # Position proche du bas (mais pas collé)
         self.frame_menu.place(relx=0.5, rely=0.92, anchor="center")
 
         btn_rejouer = tk.Button(
@@ -259,6 +262,7 @@ class Jeu:
 
     # ================= FIN DE PARTIE =================
     def victoire(self):
+        self.partie_terminee = True
         if self.balle:
             self.balle.en_mouvement = False
         if self.raquette:
@@ -281,6 +285,7 @@ class Jeu:
         self.afficher_meilleur_score_jeu()
 
     def game_over(self):
+        self.partie_terminee = True
         if self.balle:
             self.balle.en_mouvement = False
         if self.raquette:

@@ -4,107 +4,97 @@
 # But : Classe représentant la raquette du joueur
 #----------------------------------------------------------------------------#
 
-import tkinter as tk
-
 class Raquette:
     def __init__(self, canvas, x, y, largeur=100, hauteur=10, couleur="white", vitesse=10, parent=None):
-        """
-        Initialise la raquette du joueur.
-        - canvas : zone de jeu (Tkinter Canvas)
-        - x, y : position initiale (coin supérieur gauche)
-        - largeur, hauteur : dimensions de la raquette
-        - couleur : couleur d’affichage
-        - vitesse : nombre de pixels parcourus à chaque "frame"
-        - parent : widget parent sur lequel les touches clavier sont écoutées
-        """
+        # Initialise la raquette du joueur avec position, dimensions et vitesse
         self.canvas = canvas
         self.largeur = largeur
         self.hauteur = hauteur
         self.vitesse = vitesse
 
-        # Création graphique
+        # Création graphique de la raquette
         self.id = canvas.create_rectangle(
             x, y, x + largeur, y + hauteur,
             fill=couleur
         )
 
-        # États de mouvement
+        # États de déplacement
         self.deplacement_gauche = False
         self.deplacement_droite = False
 
-        # Raquette inactive au début (activée quand la balle démarre)
+        # Raquette inactive au départ (activée quand la balle démarre)
         self.actif = False
 
-        # Détermine où écouter les touches clavier
+        # Widget sur lequel écouter les touches clavier
         self._binding_widget = parent if parent is not None else canvas
 
-        # Tente de donner le focus clavier au widget
+        # Essaye de donner le focus clavier
         try:
             self._binding_widget.focus_set()
         except Exception:
             pass
 
-        # Liaisons clavier
+        # Liaisons clavier pour gauche/droite
         self._binding_widget.bind("<KeyPress-Left>", self._touche_appuyee)
         self._binding_widget.bind("<KeyPress-Right>", self._touche_appuyee)
         self._binding_widget.bind("<KeyRelease-Left>", self._touche_relachee)
         self._binding_widget.bind("<KeyRelease-Right>", self._touche_relachee)
 
-        # Fréquence de mise à jour (16 ms ≈ 60 FPS)
+        # Intervalle de mise à jour (~60 FPS)
         self._tick_ms = 16
         self._en_marche = True
 
-        # Lancement de la boucle de déplacement fluide
+        # Lance la boucle de déplacement continu
         self._deplacer_en_continu()
 
-    #  GESTION DU CLAVIER
+    # GESTION DES TOUCHES APPUYÉES
     def _touche_appuyee(self, event):
-        # Active le mouvement à gauche/droite lorsqu'une touche est pressée
+        # Active le déplacement si le jeu est actif
         if not self.actif:
-            return  # Le joueur ne peut pas bouger avant le début du jeu
+            return
 
         if event.keysym == "Left":
             self.deplacement_gauche = True
         elif event.keysym == "Right":
             self.deplacement_droite = True
 
+    # GESTION DES TOUCHES RELÂCHÉES
     def _touche_relachee(self, event):
-        # Stoppe le mouvement lorsque la touche est relâchée 
+        # Stoppe le déplacement quand la touche est relâchée
         if event.keysym == "Left":
             self.deplacement_gauche = False
         elif event.keysym == "Right":
             self.deplacement_droite = False
 
-    #  DEPLACEMENT
+    # DEPLACEMENT HORIZONTAL
     def deplacer(self, dx):
-        # Déplace la raquette horizontalement de dx pixels.
-        # Gère aussi les collisions avec les bords gauche/droite.
-        
+        # Déplace la raquette de dx pixels horizontalement
         coords = self.canvas.coords(self.id)
         if coords:
-            # Empêche la raquette de sortir de l'écran
+            # Empêche la raquette de sortir des bords du canvas
             if dx < 0 and coords[0] + dx < 0:
                 dx = -coords[0]  # limite à gauche
             elif dx > 0 and coords[2] + dx > self.canvas.winfo_width():
                 dx = self.canvas.winfo_width() - coords[2]  # limite à droite
 
+            # Applique le déplacement
             self.canvas.move(self.id, dx, 0)
 
+    # BOUCLE DE DÉPLACEMENT CONTINU
     def _deplacer_en_continu(self):
-        
-        # Boucle de mise à jour appelée toutes les 16 ms (~60 fois par seconde).
-        # Si une touche est enfoncée, la raquette se déplace continuellement.
+        # Boucle appelée toutes les 16 ms pour le déplacement fluide
         if self._en_marche:
-            # Le joueur ne peut bouger que si le jeu est actif
+            # Déplacement uniquement si le jeu est actif
             if self.actif:
                 if self.deplacement_gauche:
                     self.deplacer(-self.vitesse)
                 if self.deplacement_droite:
                     self.deplacer(self.vitesse)
 
-            # Planifie le prochain appel (animation continue)
+            # Planifie le prochain appel pour continuité
             self.canvas.after(self._tick_ms, self._deplacer_en_continu)
 
+    # RENVOIE LA POSITION ACTUELLE
     def position(self):
-        # Renvoie les coordonnées actuelles de la raquette 
+        # Renvoie les coordonnées [x1, y1, x2, y2] de la raquette
         return self.canvas.coords(self.id)

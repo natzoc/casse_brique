@@ -5,7 +5,6 @@
 #----------------------------------------------------------------------------#
 
 import tkinter as tk
-import random
 from Boutons import BoutonsJeu
 from Rules import RulesAffichage
 from Raquette import Raquette
@@ -14,12 +13,14 @@ from Bonus import Bonus
 
 class Jeu:
     def __init__(self):
+        # Initialise la fenêtre principale
         self.fenetre = tk.Tk()
         self.fenetre.title("Casse-Brique 2025")
         self.fenetre.geometry("800x600")
         self.fenetre.config(bg="#001f3f")
         self.fenetre.resizable(False, False)
 
+        # Initialisation des composants du jeu
         self.canvas = None
         self.raquette = None
         self.balle = None
@@ -35,8 +36,8 @@ class Jeu:
         self.label_meilleur_score_menu = None
         self.label_meilleur_score_jeu = None
 
-        # Etat du jeu (pour freeze après fin de partie)
-        self.partie_terminee = False
+        # Indique si le jeu est gelé (victoire ou défaite)
+        self.freeze = False
 
         # Menu principal
         self.boutons = BoutonsJeu(
@@ -45,12 +46,15 @@ class Jeu:
             action_jouer=self.afficher_terrain,
             action_options=self.afficher_options
         )
+        # Affiche le meilleur score dans le menu
         self.afficher_meilleur_score_menu()
 
-    # ================= AFFICHAGE MEILLEUR SCORE =================
+    # AFFICHAGE MEILLEUR SCORE MENU
     def afficher_meilleur_score_menu(self):
+        # Supprime l'ancien label si nécessaire
         if self.label_meilleur_score_menu:
             self.label_meilleur_score_menu.destroy()
+        # Crée un nouveau label pour le meilleur score
         self.label_meilleur_score_menu = tk.Label(
             self.fenetre,
             text=f"Meilleur score : {self.meilleur_score}",
@@ -60,6 +64,7 @@ class Jeu:
         )
         self.label_meilleur_score_menu.place(relx=0.5, rely=0.95, anchor="center")
 
+    # AFFICHAGE MEILLEUR SCORE DANS LE JEU
     def afficher_meilleur_score_jeu(self):
         if self.label_meilleur_score_jeu:
             self.label_meilleur_score_jeu.destroy()
@@ -72,14 +77,19 @@ class Jeu:
         )
         self.label_meilleur_score_jeu.place(relx=0.5, rely=0.88, anchor="center")
 
-    # ================= AFFICHAGE DU TERRAIN =================
+    # AFFICHAGE DU TERRAIN DE JEU
     def afficher_terrain(self):
+        # Débloque le jeu
+        self.freeze = False
+
+        # Supprime tous les widgets existants
         for widget in self.fenetre.winfo_children():
             widget.destroy()
 
-        self.score_actuel = 0  # reset score actuel
-        self.partie_terminee = False  # réinitialisation état jeu
+        # Reset score actuel
+        self.score_actuel = 0
 
+        # Création du canvas pour le terrain
         self.canvas = tk.Canvas(
             self.fenetre,
             width=760,
@@ -110,13 +120,16 @@ class Jeu:
             rayon=rayon_balle, couleur="white", vitesse=5, jeu=self
         )
 
+        # Initialisation des briques
         self.briques.clear()
         self.afficher_briques()
-        self.rules_affichage = RulesAffichage(self.fenetre, jeu=self)
-        self.afficher_menu_jeu()  # Menu bas pendant le jeu
+
+        # Affichage du score et du menu bas
+        self.rules_affichage = RulesAffichage(self.fenetre, self)
+        self.afficher_menu_jeu()
         self.afficher_meilleur_score_jeu()
 
-    # ================= MENU EN BAS =================
+    # MENU EN BAS DU JEU
     def afficher_menu_jeu(self):
         if self.frame_menu is not None:
             self.frame_menu.destroy()
@@ -124,25 +137,28 @@ class Jeu:
         self.frame_menu = tk.Frame(self.fenetre, bg="#001f3f")
         self.frame_menu.place(relx=0.5, rely=0.92, anchor="center")
 
+        # Bouton Menu
         btn_rejouer = tk.Button(
             self.frame_menu, text="Menu", font=("Arial", 12, "bold"),
             bg="white", fg="#001f3f", width=12, command=self.retour_menu_principal
         )
         btn_rejouer.pack(side="left", padx=10)
 
+        # Bouton Options
         btn_options = tk.Button(
             self.frame_menu, text="Options", font=("Arial", 12, "bold"),
             bg="white", fg="#001f3f", width=12, command=self.afficher_options
         )
         btn_options.pack(side="left", padx=10)
 
+        # Bouton Quitter
         btn_quitter = tk.Button(
             self.frame_menu, text="Quitter", font=("Arial", 12, "bold"),
             bg="white", fg="#001f3f", width=12, command=self.fenetre.destroy
         )
         btn_quitter.pack(side="left", padx=10)
 
-    # ================= AFFICHAGE DES BRIQUES =================
+    # AFFICHAGE DES BRIQUES
     def afficher_briques(self):
         couleurs = ["#ff5733", "#ffbd33", "#75ff33", "#33c1ff", "#c433ff"]
         largeur_brique = 70
@@ -151,6 +167,7 @@ class Jeu:
         nb_colonnes = 10
         nb_lignes = 5
 
+        # Création des briques
         for ligne in range(nb_lignes):
             for col in range(nb_colonnes):
                 x1 = 20 + col * (largeur_brique + espacement)
@@ -164,14 +181,16 @@ class Jeu:
                 )
                 self.briques.append(brique_id)
 
-    # ================= OPTIONS =================
+    # AFFICHAGE DU MENU OPTIONS
     def afficher_options(self):
+        # Supprime tous les widgets existants
         for widget in self.fenetre.winfo_children():
             widget.destroy()
 
         frame_options = tk.Frame(self.fenetre, bg="#001f3f")
         frame_options.pack(expand=True, fill="both")
 
+        # Titre Options
         label_titre = tk.Label(
             frame_options,
             text="Options du jeu",
@@ -181,6 +200,7 @@ class Jeu:
         )
         label_titre.pack(pady=30)
 
+        # Case à cocher pour activer/désactiver les bonus
         check_bonus = tk.Checkbutton(
             frame_options,
             text="Activer les bonus/malus",
@@ -194,6 +214,7 @@ class Jeu:
         )
         check_bonus.pack(pady=10)
 
+        # Bouton Retour au menu
         btn_retour = tk.Button(
             frame_options,
             text="Retour",
@@ -205,6 +226,7 @@ class Jeu:
         )
         btn_retour.pack(pady=30)
 
+    # RETOUR AU MENU PRINCIPAL
     def retour_menu_principal(self):
         for widget in self.fenetre.winfo_children():
             widget.destroy()
@@ -216,8 +238,9 @@ class Jeu:
         )
         self.afficher_meilleur_score_menu()
 
-    # ================= BONUS / MALUS =================
+    # BONUS / MALUS
     def modifier_taille_raquette(self, facteur, duree):
+        # Ajuste la taille de la raquette selon le facteur
         coords = self.canvas.coords(self.raquette.id)
         centre_x = (coords[0] + coords[2]) / 2
         largeur = (coords[2] - coords[0]) * facteur
@@ -229,15 +252,17 @@ class Jeu:
             coords[3]
         )
         if duree > 0:
+            # Réinitialise après la durée
             self.fenetre.after(duree, lambda: self.modifier_taille_raquette(1 / facteur, 0))
 
     def modifier_vitesse_raquette(self, facteur, duree):
+        # Ajuste la vitesse de la raquette
         ancienne_vitesse = self.raquette.vitesse
         self.raquette.vitesse *= facteur
         if duree > 0:
             self.fenetre.after(duree, lambda: setattr(self.raquette, "vitesse", ancienne_vitesse))
 
-    # ================= REINITIALISATION =================
+    # REINITIALISATION DES POSITIONS
     def reset_positions(self):
         if not self.canvas:
             return
@@ -247,45 +272,37 @@ class Jeu:
         self.canvas.coords(self.raquette.id, x0, y0, x0 + self.raquette.largeur, y0 + 10)
         self.balle.reset_position(380, 480 - self.balle.rayon - 5)
 
-    def rejouer(self):
-        for widget in self.fenetre.winfo_children():
-            widget.destroy()
-        self.briques.clear()
-        self.bonus_actifs.clear()
-        self.boutons = BoutonsJeu(
-            parent=self.fenetre,
-            couleur_fond="#001f3f",
-            action_jouer=self.afficher_terrain,
-            action_options=self.afficher_options
-        )
-        self.afficher_meilleur_score_menu()
-
-    # ================= FIN DE PARTIE =================
+    # FIN DE PARTIE - VICTOIRE
     def victoire(self):
-        self.partie_terminee = True
+        self.freeze = True
         if self.balle:
             self.balle.en_mouvement = False
         if self.raquette:
             self.raquette.actif = False
 
         if self.canvas:
+            # Supprime toutes les briques et affiche message victoire
             for bid in self.briques:
                 self.canvas.delete(bid)
             self.briques.clear()
             self.canvas.create_text(
                 380, 250,
-                text="🏆 Victoire ! 🏆",
+                text="🏆 Victoire 🏆",
                 font=("Arial", 28, "bold"),
                 fill="gold"
             )
 
+        # Met à jour le meilleur score si nécessaire
         if self.score_actuel > self.meilleur_score:
             self.meilleur_score = self.score_actuel
+
+        # Affiche le menu bas et le score
         self.afficher_menu_jeu()
         self.afficher_meilleur_score_jeu()
 
+    # FIN DE PARTIE - GAME OVER
     def game_over(self):
-        self.partie_terminee = True
+        self.freeze = True
         if self.balle:
             self.balle.en_mouvement = False
         if self.raquette:
@@ -301,9 +318,10 @@ class Jeu:
 
         if self.score_actuel > self.meilleur_score:
             self.meilleur_score = self.score_actuel
+
         self.afficher_menu_jeu()
         self.afficher_meilleur_score_jeu()
 
-    # ================= LANCEMENT =================
+    # LANCEMENT DE LA BOUCLE PRINCIPALE
     def lancer(self):
         self.fenetre.mainloop()

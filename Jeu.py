@@ -87,19 +87,19 @@ class Jeu:
         self.frame_menu.place(relx=0.5, rely=0.92, anchor="center")
 
         btn_rejouer = tk.Button(
-            self.frame_menu, text="🔁 Rejouer", font=("Arial", 12, "bold"),
+            self.frame_menu, text="Menu", font=("Arial", 12, "bold"),
             bg="white", fg="#001f3f", width=12, command=self.rejouer
         )
         btn_rejouer.pack(side="left", padx=10)
 
         btn_options = tk.Button(
-            self.frame_menu, text="⚙️ Options", font=("Arial", 12, "bold"),
+            self.frame_menu, text="Options", font=("Arial", 12, "bold"),
             bg="white", fg="#001f3f", width=12, command=self.afficher_options
         )
         btn_options.pack(side="left", padx=10)
 
         btn_quitter = tk.Button(
-            self.frame_menu, text="❌ Quitter", font=("Arial", 12, "bold"),
+            self.frame_menu, text="Quitter", font=("Arial", 12, "bold"),
             bg="white", fg="#001f3f", width=12, command=self.fenetre.destroy
         )
         btn_quitter.pack(side="left", padx=10)
@@ -136,7 +136,7 @@ class Jeu:
 
         label_titre = tk.Label(
             frame_options,
-            text="⚙️ Options du jeu",
+            text="Options du jeu",
             font=("Arial", 22, "bold"),
             fg="white",
             bg="#001f3f"
@@ -158,7 +158,7 @@ class Jeu:
 
         btn_retour = tk.Button(
             frame_options,
-            text="⬅️ Retour au menu",
+            text="Retour au menu",
             font=("Arial", 14, "bold"),
             bg="white",
             fg="#001f3f",

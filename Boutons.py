@@ -18,7 +18,7 @@ class BoutonsJeu:
         # Bouton "Jouer"
         self.bouton_jouer = tk.Button(
             self.frame,
-            text="▶️ Jouer",
+            text="Jouer",
             font=("Arial", 16, "bold"),
             bg="white",
             fg=couleur_fond,
@@ -31,7 +31,7 @@ class BoutonsJeu:
         # Bouton "Options"
         self.bouton_options = tk.Button(
             self.frame,
-            text="⚙️ Options",
+            text="Options",
             font=("Arial", 14, "bold"),
             bg="white",
             fg=couleur_fond,
@@ -44,7 +44,7 @@ class BoutonsJeu:
         # Bouton "Quitter"
         self.bouton_quitter = tk.Button(
             self.frame,
-            text="❌ Quitter",
+            text="Quitter",
             font=("Arial", 14),
             bg="white",
             fg=couleur_fond,

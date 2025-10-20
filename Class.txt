@@ -8,10 +8,11 @@ Logiques - Règles du jeu
 # Vies/Score
 
 ToDo: 
-affichage meilleur score dans le menu principal 
+# affichage meilleur score dans le menu principal 
 Liste, File, Pile
 Tester game over et victoire
-Lorsqu'on clique sur rejouer, cela doit réinstialiser la fenetre du menu principal, pareil quand on clique sur retour après avoir cliqué sur options
+- Lorsqu'on clique sur rejouer, cela doit réinstialiser la fenetre du menu principal, pareil quand on clique sur retour après avoir cliqué sur options
+- Victoire  et Game Over = Texte + Boutons au milieu de la fenetre
 Read me regle du jeu a formater
 faire tt les commentaires sous # 
 Relire les consignes du tp et comparé

@@ -8,10 +8,13 @@ Logiques - Règles du jeu
 # Vies/Score
 
 ToDo: 
-vitesse balle non constante à corriger
-rebond parfois aléatoire à corriger
-boutons dans le menu (options, rejouer, quitter)
 boutons options avec bonus/malus activable
 affichage meilleur score dans le menu principal 
+Liste, File, Pile
+Vérifié que tout est fait 
+Tester game over et victoire
+le jeu crash a corriger
+Read me regle du jeu
+faire tt les commentaires sous # 
 
 Commenter les 4 coordonnées de collision 

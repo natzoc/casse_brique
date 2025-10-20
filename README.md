@@ -27,7 +27,7 @@ La vitesse de la balle peut augmenter à mesure que le joueur avance.
 
 -Certaines briques peuvent être spéciales (bonus ou malus) :
 
- Bonus : agrandissement de la raquette, balles multiples.
+ Bonus : agrandissement de la raquette, balles grossie.
 
  Malus : rétrécissement de la raquette, rapetissement de la raquette.
  

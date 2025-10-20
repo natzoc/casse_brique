@@ -8,7 +8,7 @@ Logiques - Règles du jeu
 # Vies/Score
 
 ToDo: 
-boutons options avec bonus/malus activable
+Corriger balle multiple
 affichage meilleur score dans le menu principal 
 Liste, File, Pile
 Vérifié que tout est fait 
@@ -16,5 +16,6 @@ Tester game over et victoire
 le jeu crash a corriger
 Read me regle du jeu
 faire tt les commentaires sous # 
+Relire les consignes du tp et comparé
 
 Commenter les 4 coordonnées de collision 

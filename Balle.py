@@ -49,7 +49,7 @@ class Balle:
 
     #   LANCEMENT DE LA BALLE
     def lancer(self, event=None):
-        """ Lance la balle si elle est immobile """
+        # Lance la balle si elle est immobile 
         if not self.en_mouvement:
             self.en_mouvement = True
 
@@ -63,7 +63,7 @@ class Balle:
 
     #   BOUCLE PRINCIPALE
     def _boucle(self):
-        """ Boucle appelée toutes les 16ms (~60 FPS) """
+        # Boucle appelée toutes les 16ms (~60 FPS) 
         if self.en_mouvement:
             self.deplacer()
             self._gerer_collisions()
@@ -72,12 +72,12 @@ class Balle:
         self.canvas.after(16, self._boucle)
 
     def deplacer(self):
-        """ Déplace la balle selon son vecteur de déplacement """
+        # Déplace la balle selon son vecteur de déplacement 
         self.canvas.move(self.id, self.vx, self.vy)
 
     #   COLLISIONS
     def _gerer_collisions(self):
-        """ Gère les collisions avec les murs, la raquette et les briques """
+        # Gère les collisions avec les murs, la raquette et les briques
         x1, y1, x2, y2 = self.canvas.coords(self.id)
         largeur = self.canvas.winfo_width()
         hauteur = self.canvas.winfo_height()
@@ -131,7 +131,7 @@ class Balle:
                 # On augmente le score de 10 points via l’affichage du HUD (RulesAffichage)
                 self.jeu.rules_affichage.maj_score(10)
 
-                # ✅ 15% de chance de générer un bonus ou malus (si activés)
+                # 15% de chance de générer un bonus ou malus (si activés)
                 if self.jeu.bonus_actives.get() and random.random() < 0.15:
                     type_bonus = random.choice(["agrandir", "multi", "reduire", "ralentir"])
                     bx = (bx1 + bx2) / 2
@@ -155,13 +155,13 @@ class Balle:
 
     # GESTION DES VIES
     def _perdre_vie(self):
-        """ Gère la perte d'une vie et réinitialise la balle """
+        # Gère la perte d'une vie et réinitialise la balle 
         self.en_mouvement = False
         self.jeu.rules_affichage.perdre_vie()
         self.jeu.reset_positions()
 
     def reset_position(self, x, y):
-        """ Replace la balle au point de départ et arrête le mouvement """
+        # Replace la balle au point de départ et arrête le mouvement 
         self.canvas.coords(
             self.id,
             x - self.rayon, y - self.rayon,
@@ -173,7 +173,7 @@ class Balle:
 
     # Normalisation de la vitesse
     def _normaliser_vitesse(self):
-        """ Garde la vitesse constante après les rebonds """
+        # Garde la vitesse constante après les rebonds 
         vitesse_actuelle = math.sqrt(self.vx**2 + self.vy**2)
         if vitesse_actuelle == 0:
             return

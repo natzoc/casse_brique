@@ -32,7 +32,7 @@ class Bonus:
         self._chuter()
 
     def _chuter(self):
-        """Fait tomber le bonus/malus jusqu'à ce qu'il soit attrapé ou disparaisse"""
+        # Fait tomber le bonus/malus jusqu'à ce qu'il soit attrapé ou disparaisse
         if not self.actif:
             return
 
@@ -56,7 +56,7 @@ class Bonus:
         self.canvas.after(20, self._chuter)
 
     def _activer_effet(self):
-        """Applique l’effet du bonus ou du malus"""
+        # Applique l’effet du bonus ou du malus
         self.canvas.delete(self.id)
         self.actif = False
 

@@ -46,7 +46,7 @@ class Jeu:
 
     #  AFFICHAGE DU TERRAIN DE JEU
     def afficher_terrain(self):
-        """ Affiche le terrain de jeu principal (canvas, raquette, balle, briques, HUD, menu bas) """
+        # Affiche le terrain de jeu principal (canvas, raquette, balle, briques, HUD, menu bas) 
         # Supprime les widgets actuels (menu principal ou options)
         for widget in self.fenetre.winfo_children():
             widget.destroy()
@@ -82,21 +82,19 @@ class Jeu:
             rayon=rayon_balle, couleur="white", vitesse=5, jeu=self
         )
 
-        # --- Briques ---
+        # Briques 
         self.briques.clear()
         self.afficher_briques()
 
-        # --- Score et vies (HUD bas) ---
+        # Score et vies (HUD bas) 
         self.rules_affichage = RulesAffichage(self.fenetre)
 
-        # --- Menu de jeu (Rejouer / Options / Quitter) en bas ---
+        # Menu de jeu (Rejouer / Options / Quitter) en bas 
         self.afficher_menu_jeu()
 
-    # ------------------------------------------------------------------ #
     #  MENU EN BAS DU JEU (pendant la partie)
-    # ------------------------------------------------------------------ #
     def afficher_menu_jeu(self):
-        """ Affiche le menu de jeu contenant Rejouer / Options / Quitter """
+        # Affiche le menu de jeu contenant Rejouer / Options / Quitter 
         # Si un ancien frame_menu existe, on le détruit d'abord
         if self.frame_menu is not None:
             try:
@@ -125,11 +123,9 @@ class Jeu:
         )
         btn_quitter.pack(side="left", padx=10)
 
-    # ------------------------------------------------------------------ #
     #  AFFICHAGE DES BRIQUES
-    # ------------------------------------------------------------------ #
     def afficher_briques(self):
-        """ Génère et place les briques sur le canvas """
+        # Génère et place les briques sur le canvas
         couleurs = ["#ff5733", "#ffbd33", "#75ff33", "#33c1ff", "#c433ff"]
         largeur_brique = 70
         hauteur_brique = 20
@@ -150,14 +146,10 @@ class Jeu:
                 )
                 self.briques.append(brique_id)
 
-    # ------------------------------------------------------------------ #
     #  INTERFACE D'OPTIONS (INTÉGRÉE) -> retourne au MENU PRINCIPAL sur Retour
-    # ------------------------------------------------------------------ #
     def afficher_options(self):
-        """
-        Affiche l'interface d'options dans la même fenêtre.
-        Le bouton 'Retour' renvoie au MENU PRINCIPAL (BoutonsJeu).
-        """
+        # Affiche l'interface d'options dans la même fenêtre.
+        # Le bouton 'Retour' renvoie au MENU PRINCIPAL (BoutonsJeu).
         # Supprime tout ce qui est affiché (canvas, HUD, menu bas, etc.)
         for widget in self.fenetre.winfo_children():
             widget.destroy()
@@ -202,7 +194,7 @@ class Jeu:
         btn_retour.pack(pady=30)
 
     def retour_menu_principal(self):
-        """Retourne au menu principal (ré-affiche BoutonsJeu)"""
+        # Retourne au menu principal (ré-affiche BoutonsJeu)
         # Supprime tous les widgets actuels (options ou autre)
         for widget in self.fenetre.winfo_children():
             widget.destroy()
@@ -215,11 +207,9 @@ class Jeu:
             action_options=self.afficher_options
         )
 
-    # ------------------------------------------------------------------ #
     #  GESTION DES BONUS / MALUS (méthodes utilitaires)
-    # ------------------------------------------------------------------ #
     def modifier_taille_raquette(self, facteur, duree):
-        """ Modifie temporairement la taille de la raquette """
+        # Modifie temporairement la taille de la raquette
         coords = self.canvas.coords(self.raquette.id)
         centre_x = (coords[0] + coords[2]) / 2
         largeur = (coords[2] - coords[0]) * facteur
@@ -235,14 +225,14 @@ class Jeu:
             self.fenetre.after(duree, lambda: self.modifier_taille_raquette(1 / facteur, 0))
 
     def modifier_vitesse_raquette(self, facteur, duree):
-        """ Modifie temporairement la vitesse de déplacement de la raquette """
+        # Modifie temporairement la vitesse de déplacement de la raquette 
         ancienne_vitesse = self.raquette.vitesse
         self.raquette.vitesse *= facteur
         if duree > 0:
             self.fenetre.after(duree, lambda: setattr(self.raquette, "vitesse", ancienne_vitesse))
 
     def ajouter_balles_temp(self, nombre, duree):
-        """ Ajoute des balles temporaires pendant 'duree' ms """
+        # Ajoute des balles temporaires pendant 'duree' ms 
         for _ in range(nombre):
             # place la nouvelle balle au centre de la balle principale
             x1, y1, x2, y2 = self.canvas.coords(self.balle.id)
@@ -254,17 +244,15 @@ class Jeu:
                 self.fenetre.after(duree, lambda b=nouvelle: self.supprimer_balle(b))
 
     def supprimer_balle(self, balle):
-        """ Supprime une balle temporaire en toute sécurité """
+        # Supprime une balle temporaire en toute sécurité 
         try:
             self.canvas.delete(balle.id)
         except Exception:
             pass
 
-    # ------------------------------------------------------------------ #
     #  REINITIALISATION / REJOUER / VICTOIRE
-    # ------------------------------------------------------------------ #
     def reset_positions(self):
-        """ Replace la raquette et la balle au centre (après perte de vie) """
+        # Replace la raquette et la balle au centre (après perte de vie) 
         if not self.canvas:
             return
         self.raquette.actif = False
@@ -274,7 +262,7 @@ class Jeu:
         self.balle.reset_position(380, 480 - self.balle.rayon - 5)
 
     def rejouer(self):
-        """ Réinitialise complètement le terrain et re-affiche le jeu """
+        # Réinitialise complètement le terrain et re-affiche le jeu 
         # Supprime tout et recrée le terrain
         for widget in self.fenetre.winfo_children():
             widget.destroy()
@@ -290,7 +278,7 @@ class Jeu:
         )
 
     def victoire(self):
-        """ Affiche un message de victoire """
+        # Affiche un message de victoire 
         if self.canvas:
             self.canvas.create_text(
                 380, 250,
@@ -299,8 +287,6 @@ class Jeu:
                 fill="gold"
             )
 
-    # ------------------------------------------------------------------ #
     #  LANCEMENT DU JEU
-    # ------------------------------------------------------------------ #
     def lancer(self):
         self.fenetre.mainloop()

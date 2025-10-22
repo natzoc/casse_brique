@@ -10,7 +10,6 @@ Logiques - Règles du jeu
 ToDo: 
 Liste, File, Pile
 Tester game over et victoire
-Meilleur score à corriger pour la victoire
 Ne plus pouvoir lancer après 0 Vies
 - Victoire  et Game Over = Texte + Freeze
 faire tt les commentaires sous # + reformuler variable 

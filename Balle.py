@@ -40,8 +40,13 @@ class Balle:
 
     # LANCEMENT DE LA BALLE
     def lancer(self, event=None):
-        # Lance la balle si elle n'est pas déjà en mouvement
+        # Lance la balle si elle n'est pas déjà en mouvement, si le jeu est actif,
+        # et s'il reste au moins 1 vie (empêche relance après Game Over)
         if not self.en_mouvement and self.jeu and getattr(self.jeu, "jeu_actif", True):
+            # Vérifie via RulesAffichage le nombre de vies si disponible
+            if self.jeu.rules_affichage and getattr(self.jeu.rules_affichage, "vies", 1) <= 0:
+                # plus de vies -> ne lance pas
+                return
             self.en_mouvement = True
             # Direction horizontale aléatoire
             self.vx = random.choice([-self.vitesse, self.vitesse])
@@ -124,7 +129,8 @@ class Balle:
         # Supprime les briques touchées
         for bid in briques_a_supprimer:
             self.canvas.delete(bid)
-            self.jeu.briques.remove(bid)
+            if bid in self.jeu.briques:
+                self.jeu.briques.remove(bid)
 
         # Vérifie si toutes les briques sont détruites
         if not self.jeu.briques:
@@ -135,14 +141,18 @@ class Balle:
 
     # PERTE DE VIE
     def _perdre_vie(self):
-        # Arrête la balle et le jeu
+        # Arrête la balle et permet le relancement si le joueur a encore des vies
         self.en_mouvement = False
         if self.jeu:
-            self.jeu.jeu_actif = False
+            # On laisse RulesAffichage.perdre_vie gérer la décrémentation des vies
+            # et appeler jeu.game_over() si nécessaire.
+            # Ici on s'assure que, sauf game over, le jeu pourra être réactivé pour relancer la balle.
+            self.jeu.jeu_actif = True
         if self.jeu.rules_affichage:
             self.jeu.rules_affichage.perdre_vie()
         # Réinitialise les positions balle/raquette
-        self.jeu.reset_positions()
+        if self.jeu:
+            self.jeu.reset_positions()
 
     # RESET POSITION
     def reset_position(self, x, y):

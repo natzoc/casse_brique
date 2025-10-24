@@ -6,6 +6,16 @@
 
 import tkinter as tk
 
+
+"""
+Classe responsable de l'affichage et de la gestion des informations de jeu :
+score actuel, nombre de vies restantes et meilleur score. 
+Elle met à jour ces valeurs en temps réel pendant la partie et
+informe le jeu en cas de victoire ou de défaite.
+
+"""
+
+
 class RulesAffichage:
     def __init__(self, parent, jeu=None):
         # Initialise l'affichage des informations du jeu : score, vies, meilleur score

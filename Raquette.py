@@ -4,6 +4,14 @@
 # But : Classe représentant la raquette du joueur
 #----------------------------------------------------------------------------#
 
+"""
+Classe représentant la raquette contrôlée par le joueur.
+Elle gère le déplacement horizontal via les touches du clavier, 
+empêche la sortie des limites du terrain,
+ et met à jour la position en continu pendant le jeu.
+
+"""
+
 class Raquette:
     def __init__(self, canvas, x, y, largeur=100, hauteur=10, couleur="white", vitesse=10, parent=None):
         # Initialise la raquette du joueur avec position, dimensions et vitesse

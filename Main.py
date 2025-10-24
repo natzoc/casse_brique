@@ -7,6 +7,10 @@
 
 from Jeu import Jeu
 
+"""
+Point d'entrée principal pour lancer le jeu de casse-brique.
+Crée une instance de la classe Jeu et démarre la boucle principale."""
+
 if __name__ == "__main__":
     app = Jeu()
     app.lancer()

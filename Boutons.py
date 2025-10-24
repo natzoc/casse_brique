@@ -6,6 +6,12 @@
 
 import tkinter as tk
 
+"""
+Classe gérant le menu principal du jeu :
+elle affiche les boutons "Jouer", "Options" et "Quitter",
+et relie chacun à son action correspondante.
+"""
+
 class BoutonsJeu:
     def __init__(self, parent, couleur_fond="#001f3f", action_jouer=None, action_options=None):
         # Initialise le menu principal avec 3 boutons : Jouer, Options, Quitter

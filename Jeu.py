@@ -11,6 +11,18 @@ from Raquette import Raquette
 from Balle import Balle
 from Bonus import Bonus
 
+
+"""
+Classe principale du jeu Casse-Brique :
+gère l'ensemble de l'interface graphique 
+(menu, options, terrain de jeu, score, briques, bonus/malus)
+
+Elle orchestre les interactions entre les différents composants du jeu 
+(raquette, balle, règles, etc.).
+
+"""
+
+
 class Jeu:
     def __init__(self):
         # Initialise la fenêtre principale

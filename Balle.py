@@ -9,6 +9,12 @@ import random
 import math
 from Bonus import Bonus
 
+"""
+Classe gérant la balle du casse-brique :
+son affichage, son déplacement, les collisions avec les murs,
+la raquette, les briques et la gestion des vies et des bonus.
+"""
+
 class Balle:
     def __init__(self, canvas, x, y, rayon=8, couleur="white", vitesse=5, jeu=None):
         # Initialise la balle avec position, rayon, couleur et vitesse

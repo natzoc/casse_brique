@@ -5,6 +5,11 @@
 #----------------------------------------------------------------------------#
 
 import tkinter as tk
+"""
+Classe gérant les bonus et malus du casse-brique :
+elle crée leur apparence, gère leur chute automatique,
+détecte leur collision avec la raquette et applique leurs effets temporaires sur le jeu.
+"""
 
 class Bonus:
     def __init__(self, canvas, x, y, type_bonus, jeu):
@@ -42,6 +47,7 @@ class Bonus:
         rx1, ry1, rx2, ry2 = self.jeu.raquette.position()
         # Vérifie collision avec la raquette
         if y2 >= ry1 and y1 <= ry2 and x2 >= rx1 and x1 <= rx2:
+            # Si le bonus touche la raquette, on active son effet correspondant
             self._activer_effet()
             return
 
@@ -61,7 +67,7 @@ class Bonus:
         self.actif = False
 
         # Selon le type, applique l’effet correspondant
-        if self.type_bonus == "agrandir":
+        if self.type_bonus == "agrandir":  # Bonus : agrandit la raquette pendant 5 secondes
             self.jeu.modifier_taille_raquette(2.0, duree=5000)
         elif self.type_bonus == "multi":
             # Double le rayon de la balle principale pendant 8 secondes
@@ -79,9 +85,9 @@ class Bonus:
                 )
                 # Réinitialise le rayon après 8 secondes
                 self.jeu.fenetre.after(8000, lambda: self._reinitialiser_rayon(balle, ancien_rayon))
-        elif self.type_bonus == "reduire":
+        elif self.type_bonus == "reduire":   # Malus : réduit la raquette pendant 5 secondes 
             self.jeu.modifier_taille_raquette(0.5, duree=5000)
-        elif self.type_bonus == "ralentir":
+        elif self.type_bonus == "ralentir":  # Malus : ralentit la raquette pendant 5 secondes
             self.jeu.modifier_vitesse_raquette(0.5, duree=5000)
 
     def _reinitialiser_rayon(self, balle, ancien_rayon):
